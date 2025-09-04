@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Income Tax AI Bot</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container-fluid {
+            height: 100%;
+            padding: 20px;
+        }
+
+        .chat {
+            margin-top: 5%;
+            margin-bottom: 5%;
+            height: 85vh;
+        }
+
+        .card {
+            height: 100%;
+            border-radius: 15px !important;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .msg_head {
+            position: relative;
+            background: linear-gradient(135deg, #2c5530 0%, #1e3a1f 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            border-bottom: 0 !important;
+            padding: 20px;
+        }
+
+        .user_img {
+            height: 60px;
+            width: 60px;
+            border: 3px solid #fff;
+        }
+
+        .user_img_msg {
+            height: 40px;
+            width: 40px;
+        }
+
+        .img_cont {
+            position: relative;
+        }
+
+        .online_icon {
+            position: absolute;
+            height: 18px;
+            width: 18px;
+            background-color: #4cd137;
+            border-radius: 50%;
+            bottom: 0.2em;
+            right: 0.4em;
+            border: 2px solid white;
+        }
+
+        .user_info {
+            margin-left: 15px;
+            margin-top: 10px;
+        }
+
+        .user_info span {
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .user_info p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0;
+        }
+
+        .msg_card_body {
+            overflow-y: auto;
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 0;
+        }
+
+        .msg_cotainer {
+            margin-top: auto;
+            margin-bottom: auto;
+            margin-left: 10px;
+            border-radius: 20px 20px 20px 5px;
+            background-color: #2c5530;
+            padding: 12px 16px;
+            position: relative;
+            color: white;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .msg_cotainer_send {
+            margin-top: auto;
+            margin-bottom: auto;
+            margin-right: 10px;
+            border-radius: 20px 20px 5px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 12px 16px;
+            position: relative;
+            color: white;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .msg_time {
+            position: absolute;
+            left: 0;
+            bottom: -15px;
+            color: rgba(44, 85, 48, 0.7);
+            font-size: 10px;
+        }
+
+        .msg_time_send {
+            position: absolute;
+            right: 0;
+            bottom: -15px;
+            color: rgba(102, 126, 234, 0.7);
+            font-size: 10px;
+        }
+
+        .card-footer {
+            border-radius: 0 0 15px 15px !important;
+            border-top: 0 !important;
+            background: white;
+            padding: 20px;
+        }
+
+        .input-group .form-control {
+            border-radius: 25px 0 0 25px !important;
+            border: 2px solid #2c5530;
+            padding: 15px 20px;
+            font-size: 16px;
+        }
+
+        .input-group .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(44, 85, 48, 0.25);
+            border-color: #2c5530;
+        }
+
+        .send_btn {
+            background: linear-gradient(135deg, #2c5530 0%, #1e3a1f 100%);
+            border: 2px solid #2c5530;
+            color: white;
+            border-radius: 0 25px 25px 0 !important;
+            padding: 0 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .send_btn:hover {
+            background: linear-gradient(135deg, #1e3a1f 0%, #2c5530 100%);
+            transform: translateY(-1px);
+        }
+
+        .type_msg {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ced4da;
+            border-radius: 50px;
+            color: #495057;
+        }
+
+        .type_msg:focus {
+            box-shadow: 0 0 0 0.2rem rgba(44, 85, 48, 0.25);
+        }
+
+        .img_cont_msg {
+            height: 40px;
+            width: 40px;
+        }
+
+        /* Custom scrollbar */
+        .msg_card_body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .msg_card_body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .msg_card_body::-webkit-scrollbar-thumb {
+            background: #2c5530;
+            border-radius: 10px;
+        }
+
+        .msg_card_body::-webkit-scrollbar-thumb:hover {
+            background: #1e3a1f;
+        }
+
+        /* Welcome message styling */
+        .welcome-message {
+            text-align: center;
+            color: #666;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, rgba(44, 85, 48, 0.1) 0%, rgba(30, 58, 31, 0.05) 100%);
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .welcome-message h4 {
+            color: #2c5530;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .welcome-message p {
+            margin-bottom: 10px;
+        }
+
+        .quick-questions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .quick-btn {
+            background: linear-gradient(135deg, #2c5530 0%, #1e3a1f 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quick-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(44, 85, 48, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid h-100">
+        <div class="row justify-content-center h-100">
+            <div class="col-md-8 col-xl-6 chat">
+                <div class="card">
+                    <div class="card-header msg_head">
+                        <div class="d-flex bd-highlight">
+                            <div class="img_cont">
+                                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135673.png" class="rounded-circle user_img">
+                                <span class="online_icon"></span>
+                            </div>
+                            <div class="user_info">
+                                <span>Tax AI Assistant</span>
+                                <p>Your personal income tax advisor</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="messageFormeight" class="card-body msg_card_body">
+                        <div class="welcome-message">
+                            <h4><i class="fas fa-calculator"></i> Welcome to Tax AI Assistant!</h4>
+                            <p>I'm here to help you with all your income tax questions.</p>
+                            <p>Ask me about:</p>
+                            <div class="quick-questions">
+                                <button class="quick-btn" onclick="sendQuickMessage('How to file ITR?')">How to file ITR?</button>
+                                <button class="quick-btn" onclick="sendQuickMessage('Tax deductions under 80C')">80C Deductions</button>
+                                <button class="quick-btn" onclick="sendQuickMessage('TDS refund process')">TDS Refund</button>
+                                <button class="quick-btn" onclick="sendQuickMessage('Capital gains tax')">Capital Gains</button>
+                                <button class="quick-btn" onclick="sendQuickMessage('GST registration')">GST Info</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <form id="messageArea" class="input-group">
+                            <input type="text" id="text" name="msg" placeholder="Ask me about taxes, deductions, filing..." autocomplete="off" class="form-control type_msg" required/>
+                            <div class="input-group-append">
+                                <button type="submit" id="send" class="input-group-text send_btn">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Auto-scroll to bottom function
+            function scrollToBottom() {
+                $("#messageFormeight").scrollTop($("#messageFormeight")[0].scrollHeight);
+            }
+
+            // Send quick message function
+            window.sendQuickMessage = function(message) {
+                $("#text").val(message);
+                $("#messageArea").submit();
+            }
+
+            $("#messageArea").on("submit", function(event) {
+                event.preventDefault();
+                
+                const date = new Date();
+                const hour = date.getHours().toString().padStart(2, '0');
+                const minute = date.getMinutes().toString().padStart(2, '0');
+                const str_time = hour + ":" + minute;
+                var rawText = $("#text").val().trim();
+
+                if (rawText === "") {
+                    return;
+                }
+
+                // Remove welcome message on first interaction
+                $(".welcome-message").fadeOut();
+
+                var userHtml = '<div class="d-flex justify-content-end mb-4"><div class="msg_cotainer_send">' + 
+                              rawText + '<span class="msg_time_send">' + str_time + 
+                              '</span></div><div class="img_cont_msg"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="rounded-circle user_img_msg"></div></div>';
+                
+                $("#text").val("");
+                $("#messageFormeight").append(userHtml);
+                scrollToBottom();
+
+                // Show typing indicator
+                var typingHtml = '<div id="typing-indicator" class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135673.png" class="rounded-circle user_img_msg"></div><div class="msg_cotainer"><i class="fas fa-circle-notch fa-spin"></i> Analyzing your tax query...<span class="msg_time">' + str_time + '</span></div></div>';
+                $("#messageFormeight").append(typingHtml);
+                scrollToBottom();
+
+                $.ajax({
+                    data: {
+                        msg: rawText,
+                    },
+                    type: "POST",
+                    url: "/get", // Update this URL to match your backend endpoint
+                    timeout: 30000
+                }).done(function(data) {
+                    $("#typing-indicator").remove();
+                    var botHtml = '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135673.png" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">' + 
+                                 data + '<span class="msg_time">' + str_time + '</span></div></div>';
+                    $("#messageFormeight").append($.parseHTML(botHtml));
+                    scrollToBottom();
+                }).fail(function(xhr, status, error) {
+                    $("#typing-indicator").remove();
+                    var errorHtml = '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135673.png" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">Sorry, I\'m having trouble processing your request. Please try again.<span class="msg_time">' + str_time + '</span></div></div>';
+                    $("#messageFormeight").append(errorHtml);
+                    scrollToBottom();
+                });
+            });
+
+            // Handle Enter key press
+            $("#text").on("keypress", function(e) {
+                if (e.which === 13) {
+                    $("#messageArea").submit();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
